@@ -2,6 +2,21 @@
 
 Tool that bundles together all keychain system certs into one CA bundle to be used together
 
+## Homebrew
+
+You can install the app using our homebrew tap
+
+```sh
+brew install SpaceGoGames/formulae/osx-ca-bundler
+```
+
+or 
+
+```sh
+brew tap SpaceGoGames/formulae
+brew install osx-ca-bundler
+```
+
 ## Install from Sources
 
 To install the app from sources we provide a make file to make your life easier
