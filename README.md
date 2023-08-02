@@ -7,7 +7,7 @@ Tool that bundles together all keychain system certs into one CA bundle to be us
 To install the app from sources we provide a make file to make your life easier
 
 ```sh
-> make install
+make install
 ```
 
 This will install the binary into your local `/usr/local/bin` folder
