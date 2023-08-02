@@ -12,6 +12,12 @@ make install
 
 This will install the binary into your local `/usr/local/bin` folder
 
+If you do not want to use the app any longer you can simply uninstall it
+
+```sh
+make uninstall
+```
+
 ## Usage
 
 ### Generate a bundle
