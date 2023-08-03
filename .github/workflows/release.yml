@@ -1,0 +1,18 @@
+on:
+  push:
+    tags: 'v*'
+
+jobs:
+  homebrew:
+    name: Bump Homebrew formula
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mislav/bump-homebrew-formula-action@v2
+        with:
+          formula-name: osx-ca-bundler
+          homebrew-tap: SpaceGoGames/homebrew-formulae
+          download-url: https://github.com/SpaceGoGames/osx-ca-bundler/archive/refs/tags/${{ steps.extract-version.outputs.tag-name }}.tar.gz
+          commit-message: |
+            {{formulaName}} {{version}}
+        env:
+          COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
