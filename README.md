@@ -52,6 +52,13 @@ export NODE_EXTRA_CA_CERTS=~/.bundler/cert.pem
 export SSL_CERT_FILE=~/.bundler/cert.pem
 ```
 
+You can also choose to install or uninstall an login item to set the variables
+
+```sh
+osx-ca-bundler env install
+osx-ca-bundler env uninstall
+```
+
 ### Configuration
 
 Check the `~/.bundler/config.json` file which contains some tweaks.
@@ -62,13 +69,6 @@ Check the `~/.bundler/config.json` file which contains some tweaks.
   "interval" : 3600,
   "cert" : "~\/.bundler\/cert.pem"
 }
-```
-
-You can also choose to install or uninstall an login item to set the variables
-
-```sh
-osx-ca-bundler env install
-osx-ca-bundler env uninstall
 ```
 
 ### Login Items
