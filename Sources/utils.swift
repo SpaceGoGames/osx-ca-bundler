@@ -2,6 +2,8 @@ import Foundation
 
 typealias Codable = Decodable & Encodable
 
+let bash = Bash()
+
 let appName = "osx-ca-bundler"
 let appScope = "games.spacego"
 

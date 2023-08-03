@@ -1,6 +1,7 @@
 import Foundation
 import ArgumentParser
 
+let envLaunchAgent = URL.userHome.appendingPathComponent("Library/LaunchAgents/\(appName).setenv.plist")
 
 enum BundlerError: Error {
     case invalidCertPath
@@ -15,17 +16,16 @@ struct BundleCli: ParsableCommand {
     @Option(name: .shortAndLong, help: "Cert path where to write the bundle to")
     var cert: String? = nil
 
-    @Option(name: .shortAndLong, help: "Export bundle cert OpenSLL installations too.")
-    var exportToOpenSLL: Bool? = nil
+    @Option(name: .shortAndLong, help: "Export the cert path to some basic env vars (see doc for more info)")
+    var exportToEnvVars: Bool? = nil
 
     mutating func run() throws {
         info("Bundling system certs")
-        try Bundler().bundleCerts(cert:cert, exportToOpenSLL:exportToOpenSLL)
+        try Bundler().bundleCerts(cert: cert, exportToOpenSLL: false, exportToEnvVars: exportToEnvVars)
     }
 }
 
 struct Bundler {
-    let bash: Bash = Bash()
     func findCerts() throws -> [String] {
         var certs: [String] = []
 
@@ -47,7 +47,7 @@ struct Bundler {
         }
     }
 
-    func bundleCerts(cert: String?, exportToOpenSLL: Bool?) throws {
+    func bundleCerts(cert: String?, exportToOpenSLL: Bool?, exportToEnvVars: Bool?) throws {
         let config = loadOrGenerateConfig()
         let _cert = unrollTilde(string: cert ?? config.cert)
         //let _exportToOpenSLL = exportToOpenSLL ?? config.exportToOpenSLL
@@ -57,8 +57,33 @@ struct Bundler {
             let mergedCerts = certs.joined(separator: "\n")
             try mergedCerts.write(to: URL(fileURLWithPath: _cert), atomically: true, encoding: String.Encoding.utf8)
             info("Certificate bundle has been saved to: \(_cert)")
+
+            let _exportToEnvVars = exportToEnvVars ?? config.exportToEnvVars
+            if _exportToEnvVars {
+                try _exportEnvVars(cert: _cert)
+            }
         } catch {
             fatal("Failed to bundle certs with error: \(error)")
         }
+    }
+
+    func _exportEnvVars(cert: String) throws {
+        let plist = generateEnvPList(envVars: [
+            "REQUESTS_CA_BUNDLE": cert,
+            "NODE_EXTRA_CA_CERTS": cert,
+            "SSL_CERT_FILE": cert
+        ])
+
+
+        if isInstalled(agent: envLaunchAgent) {
+            let currentSha = try envLaunchAgent.sha256()
+            if plist.sha256() == currentSha {
+                return
+            }
+            try! unloadLauncher(agent: envLaunchAgent)
+        }
+
+        try loadLauncher(agent: envLaunchAgent, plist: plist)
+        info("Environment variables updated")
     }
 }

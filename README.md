@@ -49,6 +49,7 @@ By default, the cert will be written to `~/.bundler/cert.pem`. You can use this 
 ```shell
 export REQUESTS_CA_BUNDLE=~/.bundler/cert.pem
 export NODE_EXTRA_CA_CERTS=~/.bundler/cert.pem
+export SSL_CERT_FILE=~/.bundler/cert.pem
 ```
 
 ### Configuration
