@@ -3,7 +3,7 @@ import ArgumentParser
 
 let serviceLaunchAgent = URL.userHome.appendingPathComponent("Library/LaunchAgents/\(appName).plist")
 
-struct InstallCli: ParsableCommand {
+struct LaunchInstallCli: ParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "install",
         abstract: "Install the bundler as an OSX login item"
@@ -17,7 +17,7 @@ struct InstallCli: ParsableCommand {
     }
 }
 
-struct UninstallCli: ParsableCommand {
+struct LaunchUninstallCli: ParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "uninstall",
         abstract: "Uninstall the bundler as an OSX login item"
@@ -28,7 +28,7 @@ struct UninstallCli: ParsableCommand {
     }
 }
 
-struct RefreshCli: ParsableCommand {
+struct LaunchRefreshCli: ParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "refresh",
         abstract: "Refresh the launcher agent"
@@ -37,6 +37,14 @@ struct RefreshCli: ParsableCommand {
     mutating func run() throws {
         try Launcher().refresh()
     }
+}
+
+struct LaunchCli: ParsableCommand {
+    static let configuration = CommandConfiguration(
+        commandName: "launch",
+        abstract: "Handle launch agents to refresh the certs",
+        subcommands: [LaunchInstallCli.self, LaunchUninstallCli.self, LaunchRefreshCli.self]
+    )
 }
 
 struct Launcher {

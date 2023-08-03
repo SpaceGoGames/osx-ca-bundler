@@ -16,9 +16,6 @@ struct BundleCli: ParsableCommand {
     @Option(name: .shortAndLong, help: "Cert path where to write the bundle to")
     var cert: String? = nil
 
-    @Option(name: .shortAndLong, help: "Export the cert path to some basic env vars (see doc for more info)")
-    var exportToEnvVars: Bool? = nil
-
     mutating func run() throws {
         info("Bundling system certs")
         try Bundler().bundleCerts(cert: cert, exportToOpenSLL: false, exportToEnvVars: exportToEnvVars)
@@ -73,7 +70,6 @@ struct Bundler {
             "NODE_EXTRA_CA_CERTS": cert,
             "SSL_CERT_FILE": cert
         ])
-
 
         if isInstalled(agent: envLaunchAgent) {
             let currentSha = try envLaunchAgent.sha256()

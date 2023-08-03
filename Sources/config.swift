@@ -21,14 +21,6 @@ struct Config: Codable {
     var exportToOpenSLL: Bool = false
 
     /**
-     If true we will also export the path to the following env vars on login
-      - REQUESTS_CA_BUNDLE=~/.bundler/cert.pem
-      - NODE_EXTRA_CA_CERTS=~/.bundler/cert.pem
-      - SSL_CERT_FILE=~/.bundler/cert.pem
-     */
-    var exportToEnvVars: Bool = false
-
-    /**
      The re-check interval used when the bundler is installed as a launcher
      */
     var interval: UInt32 = 3600

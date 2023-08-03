@@ -64,22 +64,29 @@ Check the `~/.bundler/config.json` file which contains some tweaks.
 }
 ```
 
+You can also choose to install or uninstall an login item to set the variables
+
+```sh
+osx-ca-bundler env install
+osx-ca-bundler env uninstall
+```
+
 ### Login Items
 
 To install the bundler into your login items use
 
 ```sh
-osx-ca-bundler install
+osx-ca-bundler launch install
 ```
 
 In case you would like to remove it from your login items just uninstall it
 
 ```sh
-osx-ca-bundler uninstall
+osx-ca-bundler launch uninstall
 ```
 
 In case you change your configuration or you installed a newer version just refresh the login item
 
 ```sh
-osx-ca-bundler refresh
+osx-ca-bundler launch refresh
 ```
