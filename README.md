@@ -17,6 +17,8 @@ brew tap SpaceGoGames/formulae
 brew install osx-ca-bundler
 ```
 
+**NOTE: When uninstalling from Homebrew please ensure to first uninstall the Login Items first, brew will not uninstall them.**
+
 ## Install from Sources
 
 To install the app from sources we provide a make file to make your life easier
