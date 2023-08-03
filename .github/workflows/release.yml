@@ -11,7 +11,6 @@ jobs:
         with:
           formula-name: osx-ca-bundler
           homebrew-tap: SpaceGoGames/homebrew-formulae
-          download-url: https://github.com/SpaceGoGames/osx-ca-bundler/archive/refs/tags/${{ github.ref_name }}.tar.gz
           commit-message: |
             {{formulaName}} {{version}}
         env:
