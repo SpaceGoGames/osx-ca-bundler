@@ -26,7 +26,7 @@ struct Config: Codable {
       - NODE_EXTRA_CA_CERTS=~/.bundler/cert.pem
       - SSL_CERT_FILE=~/.bundler/cert.pem
      */
-    var exportToEnvVars: Bool = true
+    var exportToEnvVars: Bool = false
 
     /**
      The re-check interval used when the bundler is installed as a launcher
