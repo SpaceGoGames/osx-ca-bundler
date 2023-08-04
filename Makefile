@@ -9,7 +9,8 @@ install: build
 	install ".build/apple/Products/Release/osx-ca-bundler" "$(bindir)"
 
 uninstall:
-	osx-ca-bundler uninstall
+	osx-ca-bundler launch uninstall
+	osx-ca-bundler env uninstall
 	rm -rf "$(bindir)/osx-ca-bundler"
 
 clean:
