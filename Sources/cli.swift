@@ -7,6 +7,6 @@ struct cli: ParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: appName,
         abstract: "A utility that makes it easier to use bundled keychain certs",
-        subcommands: [BundleCli.self, InstallCli.self, UninstallCli.self, RefreshCli.self]
+        subcommands: [BundleCli.self, EnvCli.self, LaunchCli.self]
     )
 }

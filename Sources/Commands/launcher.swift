@@ -1,7 +1,9 @@
 import Foundation
 import ArgumentParser
 
-struct InstallCli: ParsableCommand {
+let serviceLaunchAgent = URL.userHome.appendingPathComponent("Library/LaunchAgents/\(appName).plist")
+
+struct LaunchInstallCli: ParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "install",
         abstract: "Install the bundler as an OSX login item"
@@ -15,7 +17,7 @@ struct InstallCli: ParsableCommand {
     }
 }
 
-struct UninstallCli: ParsableCommand {
+struct LaunchUninstallCli: ParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "uninstall",
         abstract: "Uninstall the bundler as an OSX login item"
@@ -26,7 +28,7 @@ struct UninstallCli: ParsableCommand {
     }
 }
 
-struct RefreshCli: ParsableCommand {
+struct LaunchRefreshCli: ParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "refresh",
         abstract: "Refresh the launcher agent"
@@ -37,30 +39,27 @@ struct RefreshCli: ParsableCommand {
     }
 }
 
+struct LaunchCli: ParsableCommand {
+    static let configuration = CommandConfiguration(
+        commandName: "launch",
+        abstract: "Handle launch agents to refresh the certs",
+        subcommands: [LaunchInstallCli.self, LaunchUninstallCli.self, LaunchRefreshCli.self]
+    )
+}
+
 struct Launcher {
 
-    let bash: Bash = Bash()
-    let launchAgentsDir = URL.userHome.appendingPathComponent("Library/LaunchAgents/\(appName).plist")
-
     func _isInstalled() -> Bool {
-        FileManager.default.fileExists(atPath: launchAgentsDir.path)
+        isInstalled(agent: serviceLaunchAgent)
     }
 
-    func _copyLauncher(interval: UInt32) throws {
+    func _loadLauncher(interval: UInt32) throws {
         let plist = generateLaunchctlPList(binDir: localBinPath().path, interval: interval)
-        try plist.write(to: launchAgentsDir, atomically: true, encoding: String.Encoding.utf8)
-    }
-
-    func _loadLauncher() throws {
-        _ = try bash.run(commandName: "launchctl", arguments: ["load", launchAgentsDir.path])
-    }
-
-    func _removeLauncher() throws {
-        try FileManager.default.removeItem(at: launchAgentsDir)
+        try loadLauncher(agent: serviceLaunchAgent, plist: plist)
     }
 
     func _unloadLauncher() throws {
-        _ = try bash.run(commandName: "launchctl", arguments: ["unload", launchAgentsDir.path])
+        try unloadLauncher(agent: serviceLaunchAgent)
     }
 
     func install(interval: UInt32?) throws {
@@ -71,8 +70,7 @@ struct Launcher {
         var config = loadOrGenerateConfig()
         let _interval = interval ?? config.interval
 
-        try _copyLauncher(interval: _interval)
-        try _loadLauncher()
+        try _loadLauncher(interval: _interval)
 
         // Only re-save if we passed something from the CLI
         if (interval != nil) {
@@ -88,7 +86,6 @@ struct Launcher {
             return
         }
         try _unloadLauncher()
-        try _removeLauncher()
         info("Uninstalled from login items")
     }
 
